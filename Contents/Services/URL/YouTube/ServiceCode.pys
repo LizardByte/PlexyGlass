@@ -1,0 +1,335 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# standard imports
+from datetime import datetime
+from typing import Optional
+import sys
+
+# plex debugging
+if 'plexscripthost' not in sys.executable.lower():  # the code is running outside of Plex
+    from plexhints.decorator_kit import indirect  # decorator kit
+    from plexhints.exception_kit import Ex  # exception kit
+    from plexhints.log_kit import Log  # log kit
+    from plexhints.model_kit import VideoClipObject  # model kit
+    from plexhints.object_kit import Callback, IndirectResponse, MediaObject, PartObject  # object kit
+    from plexhints.prefs_kit import Prefs  # prefs kit
+
+# lib imports
+import youtube_dl
+
+# todo - add more formats
+#  determine if it's possible to add individual audio and video streams...
+#  will plex automatically select one of each to combine them?
+# https://gist.github.com/AgentOak/34d47c65b1d28829bb17c24c04a0096f
+format_dict = {
+    18: dict(
+        format_note='360p',
+        container='mp4',
+        video_resolution=360,
+        video_codec='h264',
+        audio_codec='aac'
+    ),
+    59: dict(
+        format_note='480p',
+        container='mp4',
+        video_resolution=480,
+        video_codec='h264',
+        audio_codec='aac'
+    ),
+    22: dict(
+        format_note='720p',
+        container='mp4',
+        video_resolution=720,
+        video_codec='h264',
+        audio_codec='aac'
+    ),
+    37: dict(
+        format_note='1080p',
+        container='mp4',
+        video_resolution=1080,
+        video_codec='h264',
+        audio_codec='aac'
+    )
+}
+
+
+def extract_youtube_data(url):
+    # type: (str) -> Optional[dict]
+    """
+    Extract YouTube data from a given URL.
+
+    Parameters
+    ----------
+    url : str
+        The video to extract data from.
+
+    Returns
+    -------
+    Optional[dict]
+        A dictionary containing the video's data.
+
+    Examples
+    --------
+    >>> extract_youtube_data(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    {...}
+    """
+    youtube_dl_params = dict(
+        outmpl='%(id)s.%(ext)s',
+        youtube_include_dash_manifest=False,
+        username=Prefs['str_youtube_user'] if Prefs['str_youtube_user'] else None,
+        password=Prefs['str_youtube_passwd'] if Prefs['str_youtube_passwd'] else None,
+    )
+
+    ydl = youtube_dl.YoutubeDL(params=youtube_dl_params)
+
+    with ydl:
+        try:
+            result = ydl.extract_info(
+                url=url,
+                download=False  # We just want to extract the info
+            )
+        except youtube_dl.utils.ExtractorError as e:
+            Log.Error(e)
+            raise Ex.MediaNotAvailable
+        except youtube_dl.utils.DownloadError as e:
+            print('----------')
+            print(e)
+            if 'Sign in to confirm your age' in str(e):
+                Log.Error(e)
+                raise Ex.MediaNotAuthorized
+            elif 'The uploader has not made this video available in your country.' in str(e):
+                Log.Error(e)
+                raise Ex.MediaGeoblocked
+        else:
+            if 'entries' in result:
+                # Can be a playlist or a list of videos
+                video_data = result['entries'][0]
+            else:
+                # Just a video
+                video_data = result
+
+            return video_data
+
+    return
+
+
+def normalize_url(url):
+    # type: (str) -> Optional[str]
+    """
+    Get the video webpage url from `youtube-dl`.
+
+    Parameters
+    ----------
+    url : str
+        A string representation of url as provided by the Plex plugin.
+
+    Returns
+    -------
+    Optional[str]
+        The video webpage url. If no video webpage is found then ``None`` is returned.
+
+    Examples
+    --------
+    >>> normalize_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    """
+    Log.Info('Normalizing YouTube url: %s' % url)
+
+    video_data = extract_youtube_data(url=url)
+
+    if video_data:
+        try:
+            webpage_url = video_data['webpage_url']
+            Log.Info('YouTube url normalized to: %s' % webpage_url)
+        except KeyError:
+            Log.Error('YouTube webpage_url not found in video_data: %s' % video_data)
+            return
+        else:
+            return webpage_url
+
+
+def metadata_object_for_url(url):
+    # type: (str) -> Optional[VideoClipObject]
+    """
+    Get YouTube metadata for a given URL.
+
+    Parameters
+    ----------
+    url : str
+        The url to get metadata for.
+
+    Returns
+    -------
+    Optional[VideoClipObject]
+        The Plex video clip object.
+
+    Examples
+    --------
+    >>> metadata_object_for_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    ...
+    """
+    Log.Info('Collecting metadata for YouTube url: %s' % url)
+
+    video_data = extract_youtube_data(url=url)
+
+    title = None
+    summary = None
+    thumb = None
+    date = None
+    duration = 0
+
+    if video_data:
+        try:
+            title = video_data['title']
+        except KeyError:
+            raise Ex.MediaNotAvailable
+
+        if not title:
+            raise Ex.MediaNotAvailable
+
+        try:
+            summary = video_data['description']
+        except KeyError:
+            pass
+
+        try:
+            thumb = video_data['thumbnail']
+        except KeyError:
+            thumb_height = 0
+            try:
+                for thumbs in video_data['thumbnails']:
+                    if thumbs['height'] > thumb_height:
+                        thumb = thumbs['url']
+                        thumb_height = thumbs['height']
+            except KeyError:
+                pass
+
+        try:
+            date = video_data['upload_date']
+        except KeyError:
+            pass
+        else:
+            date = datetime.strptime(date, '%Y%m%d')
+
+        try:
+            duration = video_data['duration']  # in seconds
+        except KeyError:
+            pass
+        else:
+            # duration must be in milliseconds
+            duration *= 1000
+
+    Log.Info('YouTube service :: title: %s' % title)
+    Log.Info('YouTube service :: summary: %s' % summary)
+    Log.Info('YouTube service :: thumb: %s' % thumb)
+    Log.Info('YouTube service :: originally_available_at: %s' % date)
+    Log.Info('YouTube service :: duration: %s' % duration)
+
+    return VideoClipObject(
+        title=title,
+        summary=summary,
+        thumb=thumb,
+        originally_available_at=date,
+        duration=duration
+    )
+
+
+def media_objects_for_url(url):
+    # type: (str) -> Optional[list]
+    """
+    Build the Plex media objects for a given URL.
+
+    Parameters
+    ----------
+    url : str
+        The url to build media objects for.
+
+    Returns
+    -------
+    Optional[list]
+        A list of Plex media objects.
+
+    Examples
+    --------
+    >>> media_objects_for_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    [...]
+    """
+    Log.Info('Attempting to create media objects for url: %s' % url)
+    video_data = extract_youtube_data(url=url)
+
+    ret = []
+
+    if video_data:
+
+        for fmt in video_data['formats']:
+            fmt_id = int(fmt['format_id'])  # youtube-dl gives unicode values
+            Log.Debug('YouTube service :: processing format_id: %s' % fmt_id)
+            if fmt_id in format_dict:  # item has video and audio!
+                Log.Info('YouTube Service: found matching format id: %s' % fmt_id)
+                ret.append(MediaObject(
+                    parts=[
+                        PartObject(
+                            key=Callback(
+                                play_video, url=url, post_url=url, default_fmt=fmt_id)
+                        )
+                    ],
+                    container=format_dict[fmt_id]['container'],
+                    video_codec=format_dict[fmt_id]['video_codec'],
+                    audio_codec=format_dict[fmt_id]['audio_codec'],
+                    video_resolution=str(format_dict[fmt_id]['video_resolution']),
+                    optimized_for_streaming=(format_dict[fmt_id]['container'] == 'mp4')
+                ))
+
+    return ret
+
+
+@indirect
+def play_video(url=None, default_fmt=None, **kwargs):
+    # type: (Optional[str], Optional[int], **any) -> Optional[IndirectResponse]
+    """
+    Play the YouTube video of a given url and format.
+
+    Parameters
+    ----------
+    url : Optional[str]
+        The url of the video to play. If not url is given the function will immediately return.
+    default_fmt : Optional[int]
+        The YouTube format id to attempt to play.
+    kwargs : **any
+        Not currently used.
+
+    Returns
+    -------
+    Optional[IndirectResponse]
+        The playback response for Plex to process.
+
+    Examples
+    --------
+    >>> play_video(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ', default_fmt=37)
+    ...
+    """
+    Log.Info('YouTube service :: attempting to play video: %s' % url)
+
+    if not url:
+        return None
+
+    video_data = extract_youtube_data(url=url)
+
+    if video_data:
+        for fmt in video_data['formats']:
+            fmt_id = int(fmt['format_id'])  # youtube-dl gives unicode values
+            Log.Debug('YouTube service :: processing format_id: %s' % fmt_id)
+            if fmt_id == default_fmt:
+                final_url = fmt['url']
+                Log.Info('YouTube service :: final_url: %s' % final_url)
+
+                return IndirectResponse(VideoClipObject, key=final_url)
+
+    return
+
+
+# remap plex predefined functions... function names should be lowercase
+NormalizeURL = normalize_url
+MetadataObjectForURL = metadata_object_for_url
+MediaObjectsForURL = media_objects_for_url
