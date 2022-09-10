@@ -8,6 +8,9 @@ import sys
 
 # plex debugging
 if 'plexscripthost' not in sys.executable.lower():  # the code is running outside of Plex
+    from plexhints import update_sys_path
+    update_sys_path()
+
     from plexhints.decorator_kit import indirect  # decorator kit
     from plexhints.exception_kit import Ex  # exception kit
     from plexhints.log_kit import Log  # log kit
@@ -17,6 +20,11 @@ if 'plexscripthost' not in sys.executable.lower():  # the code is running outsid
 
 # lib imports
 import youtube_dl
+
+# constants
+plugin_name = 'PlexyGlass'
+service_name = 'YouTube'
+service_type = 'URL'
 
 # todo - add more formats
 #  determine if it's possible to add individual audio and video streams...
@@ -90,16 +98,16 @@ def extract_youtube_data(url):
                 download=False  # We just want to extract the info
             )
         except youtube_dl.utils.ExtractorError as e:
-            Log.Error(e)
+            Log.Error('%s :: %s %s Service :: error: %s' % (plugin_name, service_name, service_type, e))
             raise Ex.MediaNotAvailable
         except youtube_dl.utils.DownloadError as e:
             print('----------')
             print(e)
             if 'Sign in to confirm your age' in str(e):
-                Log.Error(e)
+                Log.Error('%s :: %s %s Service :: error: %s' % (plugin_name, service_name, service_type, e))
                 raise Ex.MediaNotAuthorized
             elif 'The uploader has not made this video available in your country.' in str(e):
-                Log.Error(e)
+                Log.Error('%s :: %s %s Service :: error: %s' % (plugin_name, service_name, service_type, e))
                 raise Ex.MediaGeoblocked
         else:
             if 'entries' in result:
@@ -134,16 +142,18 @@ def normalize_url(url):
     >>> normalize_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     """
-    Log.Info('Normalizing YouTube url: %s' % url)
+    Log.Info('%s :: %s %s Service :: normalizing url: %s' % (plugin_name, service_name, service_type, url))
 
     video_data = extract_youtube_data(url=url)
 
     if video_data:
         try:
             webpage_url = video_data['webpage_url']
-            Log.Info('YouTube url normalized to: %s' % webpage_url)
+            Log.Error('%s :: %s %s Service :: normalized url to: %s' % (
+                plugin_name, service_name, service_type, webpage_url))
         except KeyError:
-            Log.Error('YouTube webpage_url not found in video_data: %s' % video_data)
+            Log.Error('%s :: %s %s Service :: webpage_url not found in video_data: %s' % (
+                plugin_name, service_name, service_type, video_data))
             return
         else:
             return webpage_url
@@ -169,7 +179,7 @@ def metadata_object_for_url(url):
     >>> metadata_object_for_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     ...
     """
-    Log.Info('Collecting metadata for YouTube url: %s' % url)
+    Log.Info('%s :: %s %s Service :: collecting metadata for url: %s' % (plugin_name, service_name, service_type, url))
 
     video_data = extract_youtube_data(url=url)
 
@@ -220,11 +230,10 @@ def metadata_object_for_url(url):
             # duration must be in milliseconds
             duration *= 1000
 
-    Log.Info('YouTube service :: title: %s' % title)
-    Log.Info('YouTube service :: summary: %s' % summary)
-    Log.Info('YouTube service :: thumb: %s' % thumb)
-    Log.Info('YouTube service :: originally_available_at: %s' % date)
-    Log.Info('YouTube service :: duration: %s' % duration)
+    Log.Info('%s :: %s %s Service :: title: %s' % (plugin_name, service_name, service_type, title))
+    Log.Info('%s :: %s %s Service :: summary: %s' % (plugin_name, service_name, service_type, summary))
+    Log.Info('%s :: %s %s Service :: originally_available_at: %s' % (plugin_name, service_name, service_type, date))
+    Log.Info('%s :: %s %s Service :: duration: %s' % (plugin_name, service_name, service_type, duration))
 
     return VideoClipObject(
         title=title,
@@ -255,7 +264,8 @@ def media_objects_for_url(url):
     >>> media_objects_for_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     [...]
     """
-    Log.Info('Attempting to create media objects for url: %s' % url)
+    Log.Info('%s :: %s %s Service :: attempting to create media object for url: %s' % (
+        plugin_name, service_name, service_type, url))
     video_data = extract_youtube_data(url=url)
 
     ret = []
@@ -264,9 +274,9 @@ def media_objects_for_url(url):
 
         for fmt in video_data['formats']:
             fmt_id = int(fmt['format_id'])  # youtube-dl gives unicode values
-            Log.Debug('YouTube service :: processing format_id: %s' % fmt_id)
             if fmt_id in format_dict:  # item has video and audio!
-                Log.Info('YouTube Service: found matching format id: %s' % fmt_id)
+                Log.Info('%s :: %s %s Service :: found matching format id: %s' % (
+                    plugin_name, service_name, service_type, fmt_id))
                 ret.append(MediaObject(
                     parts=[
                         PartObject(
@@ -309,7 +319,7 @@ def play_video(url=None, default_fmt=None, **kwargs):
     >>> play_video(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ', default_fmt=37)
     ...
     """
-    Log.Info('YouTube service :: attempting to play video: %s' % url)
+    Log.Info('%s :: %s %s Service :: attempting to play video: %s' % (plugin_name, service_name, service_type, url))
 
     if not url:
         return None
@@ -319,10 +329,9 @@ def play_video(url=None, default_fmt=None, **kwargs):
     if video_data:
         for fmt in video_data['formats']:
             fmt_id = int(fmt['format_id'])  # youtube-dl gives unicode values
-            Log.Debug('YouTube service :: processing format_id: %s' % fmt_id)
             if fmt_id == default_fmt:
                 final_url = fmt['url']
-                Log.Info('YouTube service :: final_url: %s' % final_url)
+                Log.Info('%s :: %s %s Service :: final_url: %s' % (plugin_name, service_name, service_type, final_url))
 
                 return IndirectResponse(VideoClipObject, key=final_url)
 

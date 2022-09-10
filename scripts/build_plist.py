@@ -51,7 +51,7 @@ pl = dict(
                 <tr>
                     <td>Version:  %s</td>
                     <td>%s</td>
-                    <td>| <a href="https://github.com/LizardByte/Plex-URL-Services/releases/latest"
+                    <td>| <a href="https://github.com/LizardByte/PlexyGlass/releases/latest"
                              target="_blank">Releases</a></td>
                 </tr>
             </table>
@@ -60,7 +60,7 @@ pl = dict(
                 <tr>
                     <td><i class="fa fa-fw fa-question-circle"></i> Reference:</td>
                     <td>| <i class="fa-solid fa-fw fa-file-lines"></i> <a
-                            href="https://docs.lizardbyte.dev/projects/plex-url-services" target="_blank">Docs</a></td>
+                            href="https://docs.lizardbyte.dev/projects/plexyglass" target="_blank">Docs</a></td>
                 </tr>
             </table>
         ]]>
