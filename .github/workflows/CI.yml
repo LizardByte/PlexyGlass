@@ -49,7 +49,7 @@ jobs:
         run: |
           echo "Installing Requirements"
           python --version
-          python -m pip --no-python-version-warning --disable-pip-version-check install --upgrade pip==20.3.4 setuptools
+          python -m pip --no-python-version-warning --disable-pip-version-check install --upgrade pip setuptools
 
           # install dev requirements
           python -m pip install --upgrade -r requirements-dev.txt
@@ -62,7 +62,7 @@ jobs:
         env:
           BUILD_VERSION: ${{ needs.check_changelog.outputs.next_version }}
         run: |
-          python scripts/build_plist.py
+          python ./scripts/build_plist.py
 
       - name: Test Plex Plugin
         working-directory: PlexyGlass.bundle
