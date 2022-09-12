@@ -75,7 +75,7 @@ with open(os.path.join(root_dir, 'CHANGELOG.md'), 'r') as f:
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # 'm2r2',  # enable markdown files
+    'm2r2',  # enable markdown files
     'numpydoc',  # this automatically loads `sphinx.ext.autosummary` as well
     'sphinx.ext.autodoc',  # autodocument modules
     'sphinx.ext.autosectionlabel',
@@ -92,7 +92,7 @@ extensions = [
 exclude_patterns = ['toc.rst']
 
 # Extensions to include.
-source_suffix = ['.rst']
+source_suffix = ['.rst', '.md']
 
 # Change default contents file
 master_doc = 'index'
