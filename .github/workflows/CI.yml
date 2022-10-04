@@ -83,6 +83,8 @@ jobs:
             !**/__pycache__
             !**/PlexyGlass.bundle/.*
             !**/PlexyGlass.bundle/cache.sqlite
+            !**/Themerr-plex.bundle/DOCKER_README.md
+            !**/Themerr-plex.bundle/Dockerfile
             !**/PlexyGlass.bundle/docs
             !**/PlexyGlass.bundle/scripts
 
@@ -90,7 +92,16 @@ jobs:
         shell: bash
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
-          7z "-xr!*.git*" "-xr!*.pyc" "-xr!__pycache__" "-x!.*" "-x!cache.sqlite" "-x!docs" "-x!scripts" \
+          7z \
+            "-xr!*.git*" \
+            "-xr!*.pyc" \
+            "-xr!__pycache__" \
+            "-xr!PlexyGlass.bundle\.*" \
+            "-xr!PlexyGlass.bundle\cache.sqlite" \
+            "-xr!PlexyGlass.bundle\DOCKER_README.md" \
+            "-xr!PlexyGlass.bundle\Dockerfile" \
+            "-xr!PlexyGlass.bundle\docs" \
+            "-xr!PlexyGlass.bundle\scripts" \
             a "./PlexyGlass.bundle.zip" "PlexyGlass.bundle"
 
           mkdir artifacts
