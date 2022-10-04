@@ -81,6 +81,7 @@ jobs:
             !**/*.git*
             !**/*.pyc
             !**/__pycache__
+            !**/plexhints*
             !**/PlexyGlass.bundle/.*
             !**/PlexyGlass.bundle/cache.sqlite
             !**/Themerr-plex.bundle/DOCKER_README.md
@@ -96,12 +97,13 @@ jobs:
             "-xr!*.git*" \
             "-xr!*.pyc" \
             "-xr!__pycache__" \
-            "-xr!PlexyGlass.bundle\.*" \
-            "-xr!PlexyGlass.bundle\cache.sqlite" \
-            "-xr!PlexyGlass.bundle\DOCKER_README.md" \
-            "-xr!PlexyGlass.bundle\Dockerfile" \
-            "-xr!PlexyGlass.bundle\docs" \
-            "-xr!PlexyGlass.bundle\scripts" \
+            "-xr!plexhints*" \
+            "-xr!PlexyGlass.bundle/.*" \
+            "-xr!PlexyGlass.bundle/cache.sqlite" \
+            "-xr!PlexyGlass.bundle/DOCKER_README.md" \
+            "-xr!PlexyGlass.bundle/Dockerfile" \
+            "-xr!PlexyGlass.bundle/docs" \
+            "-xr!PlexyGlass.bundle/scripts" \
             a "./PlexyGlass.bundle.zip" "PlexyGlass.bundle"
 
           mkdir artifacts
