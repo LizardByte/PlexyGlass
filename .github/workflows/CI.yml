@@ -40,7 +40,7 @@ jobs:
           path: PlexyGlass.bundle
 
       - name: Install Python 2.7
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: '2.7'
 
@@ -81,8 +81,11 @@ jobs:
             !**/*.git*
             !**/*.pyc
             !**/__pycache__
+            !**/plexhints*
             !**/PlexyGlass.bundle/.*
             !**/PlexyGlass.bundle/cache.sqlite
+            !**/Themerr-plex.bundle/DOCKER_README.md
+            !**/Themerr-plex.bundle/Dockerfile
             !**/PlexyGlass.bundle/docs
             !**/PlexyGlass.bundle/scripts
 
@@ -90,7 +93,17 @@ jobs:
         shell: bash
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
-          7z "-xr!*.git*" "-xr!*.pyc" "-xr!__pycache__" "-x!.*" "-x!cache.sqlite" "-x!docs" "-x!scripts" \
+          7z \
+            "-xr!*.git*" \
+            "-xr!*.pyc" \
+            "-xr!__pycache__" \
+            "-xr!plexhints*" \
+            "-xr!PlexyGlass.bundle/.*" \
+            "-xr!PlexyGlass.bundle/cache.sqlite" \
+            "-xr!PlexyGlass.bundle/DOCKER_README.md" \
+            "-xr!PlexyGlass.bundle/Dockerfile" \
+            "-xr!PlexyGlass.bundle/docs" \
+            "-xr!PlexyGlass.bundle/scripts" \
             a "./PlexyGlass.bundle.zip" "PlexyGlass.bundle"
 
           mkdir artifacts

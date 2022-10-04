@@ -26,3 +26,7 @@ Downloads
 .. image:: https://img.shields.io/github/downloads/lizardbyte/plexyglass/total?style=for-the-badge&logo=github
    :alt: GitHub Releases
    :target: https://github.com/LizardByte/PlexyGlass/releases/latest
+
+.. image:: https://img.shields.io/docker/pulls/lizardbyte/plexyglass?style=for-the-badge&logo=docker
+   :alt: Docker
+   :target: https://hub.docker.com/r/lizardbyte/plexyglass
