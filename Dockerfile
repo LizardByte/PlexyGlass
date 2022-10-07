@@ -1,5 +1,5 @@
 # buildstage
-FROM python:2.7.18-alpine3.11 as buildstage
+FROM python:2.7.18-buster as buildstage
 
 # build args
 ARG BUILD_VERSION
@@ -15,12 +15,23 @@ WORKDIR /build/
 # copy repo
 COPY . .
 
-RUN python  # update pip \
-      -m pip --no-python-version-warning --disable-pip-version-check install --upgrade pip==20.3.4 setuptools \
-    && python -m pip install --upgrade -r requirements-dev.txt  # install dev requirements \
-    && python ./scripts/install_requirements.py  # install plugin requirements \
-    && python ./scripts/build_plist.py  # build plist \
-    && rm -r ./scripts/  # remove scripts dir
+RUN \
+    # update Alpine packages
+    apt-get update && apt-get -y --no-install-recommends install \
+      # install git -> required for pip to install from git
+      git=1:2.20.1* \
+    && rm -rf /var/lib/apt/lists/* \
+    # update python/pip
+    && python -m pip --no-python-version-warning --disable-pip-version-check install --no-cache-dir --upgrade \
+      pip==20.3.4 setuptools \
+    # install build requirements
+    && python -m pip install --no-cache-dir --upgrade -r requirements-dev.txt \
+    # install plugin requirements
+    && python ./scripts/install_requirements.py \
+    # build plist file
+    && python ./scripts/build_plist.py \
+    # remove scripts directory
+    && rm -rf ./scripts/
 
 # single layer deployed image
 FROM scratch
