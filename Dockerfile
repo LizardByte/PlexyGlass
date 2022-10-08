@@ -1,5 +1,5 @@
-# buildstage
-FROM python:2.7.18-buster as buildstage
+# syntax = docker/dockerfile:latest
+FROM python:2.7.18-buster AS buildstage
 
 # build args
 ARG BUILD_VERSION
@@ -8,37 +8,41 @@ ARG GITHUB_SHA=$COMMIT
 # note: BUILD_VERSION may be blank, COMMIT is also available
 # note: build_plist.py uses BUILD_VERSION and GITHUB_SHA
 
-# setup build directory
-RUN mkdir /build
-WORKDIR /build/
+# create build dir and copy GitHub repo there
+# todo - add `--link` once hadolint supports this syntax, see https://github.com/hadolint/hadolint/issues/826
+COPY . /build
 
-# copy repo
-COPY . .
+# set build dir
+WORKDIR /build
 
-RUN \
-    # update Alpine packages
-    apt-get update && apt-get -y --no-install-recommends install \
+# test, list files including hidden ones - todo - remove this
+RUN ls -a
+
+# update packages
+RUN apt-get update  \
+    && apt-get -y --no-install-recommends install \
       # install git -> required for pip to install from git
       git=1:2.20.1* \
-    && rm -rf /var/lib/apt/lists/* \
-    # update python/pip
-    && python -m pip --no-python-version-warning --disable-pip-version-check install --no-cache-dir --upgrade \
-      pip==20.3.4 setuptools \
-    # install build requirements
-    && python -m pip install --no-cache-dir --upgrade -r requirements-dev.txt \
-    # install plugin requirements
-    && python ./scripts/install_requirements.py \
-    # build plist file
-    && python ./scripts/build_plist.py \
-    # remove scripts directory
-    && rm -rf ./scripts/
+    && rm -rf /var/lib/apt/lists/*
 
-# single layer deployed image
-FROM scratch
+# install build requirements
+RUN python -m pip --no-python-version-warning --disable-pip-version-check install --no-cache-dir --upgrade \
+      pip==20.3.4 setuptools \
+    && python -m pip install --no-cache-dir --upgrade -r requirements-dev.txt
+
+# build plugin
+RUN python ./scripts/install_requirements.py \
+    && python ./scripts/build_plist.py \
+
+# clean
+RUN rm -rf ./scripts/
+
+FROM scratch AS deploy
 
 # variables
 ARG PLUGIN_NAME="PlexyGlass.bundle"
 ARG PLUGIN_DIR="/config/Library/Application Support/Plex Media Server/Plug-ins"
 
 # add files from buildstage
+# todo - add `--link` once hadolint supports this syntax, see https://github.com/hadolint/hadolint/issues/826
 COPY --from=buildstage /build/ $PLUGIN_DIR/$PLUGIN_NAME
