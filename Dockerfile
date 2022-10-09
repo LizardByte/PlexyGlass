@@ -34,7 +34,6 @@ RUN python ./scripts/install_requirements.py \
 # clean
 RUN rm -rf ./scripts/ \
     # list contents
-    # todo - why is dockerignore not being respected?
     && ls -a
 
 FROM scratch AS deploy
