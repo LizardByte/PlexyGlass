@@ -15,13 +15,6 @@ COPY . /build
 # set build dir
 WORKDIR /build
 
-# update packages
-RUN apt-get update  \
-    && apt-get -y --no-install-recommends install \
-      # install git -> required for pip to install from git
-      git=1:2.20.1* \
-    && rm -rf /var/lib/apt/lists/*
-
 # update pip
 RUN python -m pip --no-python-version-warning --disable-pip-version-check install --no-cache-dir --upgrade \
       pip==20.3.4 setuptools
