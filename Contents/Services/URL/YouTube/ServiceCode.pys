@@ -4,10 +4,13 @@
 # standard imports
 from datetime import datetime
 from typing import Optional
-import sys
 
 # plex debugging
-if 'plexscripthost' not in sys.executable.lower() or sys.executable != '':  # the code is running outside of Plex
+try:
+    import plexhints  # noqa: F401
+except ImportError:
+    pass
+else:  # the code is running outside of Plex
     from plexhints import update_sys_path
     update_sys_path()
 
