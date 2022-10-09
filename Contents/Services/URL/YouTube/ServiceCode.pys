@@ -7,7 +7,7 @@ from typing import Optional
 import sys
 
 # plex debugging
-if 'plexscripthost' not in sys.executable.lower() or sys.executable != '':  # the code is running outside of Plex
+if 'plexscripthost' not in sys.executable.lower() or not sys.executable:  # the code is running outside of Plex
     from plexhints import update_sys_path
     update_sys_path()
 
