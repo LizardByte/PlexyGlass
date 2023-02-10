@@ -12,7 +12,6 @@ ARG GITHUB_SHA=$COMMIT
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # install dependencies
-# dotnet deps: https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu#dependencies
 RUN <<_DEPS
 #!/bin/bash
 set -e
