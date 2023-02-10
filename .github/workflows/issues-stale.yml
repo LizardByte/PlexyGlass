@@ -3,11 +3,13 @@
 # Don't make changes to this file in this repo as they will be overwritten with changes made to the same file in
 # the above-mentioned repo.
 
+# Manage stale issues and PRs.
+
 name: Stale Issues / PRs
 
 on:
   schedule:
-    - cron: '00 00 * * *'
+    - cron: '00 10 * * *'
 
 jobs:
   stale:
