@@ -6,3 +6,5 @@
 
 # ignore directories
 docs/
+tests/
+venv/

@@ -6,11 +6,13 @@
    about/installation
    about/docker
    about/usage
+   about/changelog
 
 .. toctree::
    :maxdepth: 2
    :caption: Contributing
 
+   contributing/contributing
    contributing/build
    contributing/testing
 
