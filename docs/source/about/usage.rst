@@ -5,8 +5,14 @@ Usage
 
 End Users
 ---------
-There are available preferences/settings available. Navigate to the `Plugins` menu within the Plex server settings.
-Select the gear cog when hovering over the PlexyGlass plugin tile.
+Minimal setup is required to use PlexyGlass. In addition to the installation, a couple of settings may be configured.
+
+   #. Navigate to the `Plugins` menu within the Plex server settings.
+   #. Select the gear cog when hovering over the PlexyGlass plugin tile.
+   #. Set the values of the preferences and save.
+
+      .. Warning:: Plex stores configuration values in the log. If you upload your logs for support, it would be wise to
+         review the data in the log file.
 
 Developers
 ----------
