@@ -61,7 +61,8 @@ for directory in paths:
 
 # -- Project information -----------------------------------------------------
 project = 'PlexyGlass'
-copyright = '%s, %s' % (datetime.now().year, project)
+project_copyright = '%s, %s' % (datetime.now().year, project)
+epub_copyright = project_copyright
 author = 'ReenigneArcher'
 
 # The full version, including alpha/beta/rc tags
@@ -99,12 +100,14 @@ master_doc = 'index'
 
 # -- Options for HTML output -------------------------------------------------
 
+# images
+html_favicon = os.path.join(root_dir, 'Contents', 'Resources', 'favicon.ico')
+html_logo = os.path.join(root_dir, 'Contents', 'Resources', 'attribution.png')
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
-
-html_logo = os.path.join(root_dir, 'Contents', 'Resources', 'attribution.png')
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -134,3 +137,7 @@ todo_include_todos = True
 
 # numpydoc config
 numpydoc_validation_checks = {'all', 'SA01'}  # Report warnings for all checks *except* for SA01
+
+# disable epub mimetype warnings
+# https://github.com/readthedocs/readthedocs.org/blob/eadf6ac6dc6abc760a91e1cb147cc3c5f37d1ea8/docs/conf.py#L235-L236
+suppress_warnings = ["epub.unknown_project_files"]

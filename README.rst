@@ -6,13 +6,13 @@ LizardByte has the full documentation hosted on `Read the Docs <http://plexyglas
 
 About
 -----
-PlexyGlass is a Services plug-in for Plex Media Player. The plug-in currently provides a YouTube URL Service.
+PlexyGlass is a Services plug-in for Plex Media Server. The plug-in currently provides a YouTube URL Service.
 Additional services may be added in the future.
 
 Integrations
 ------------
 
-.. image:: https://img.shields.io/github/workflow/status/lizardbyte/plexyglass/CI/master?label=CI%20build&logo=github&style=for-the-badge
+.. image:: https://img.shields.io/github/actions/workflow/status/lizardbyte/plexyglass/CI.yml.svg?branch=master&label=CI%20build&logo=github&style=for-the-badge
    :alt: GitHub Workflow Status (CI)
    :target: https://github.com/LizardByte/PlexyGlass/actions/workflows/CI.yml?query=branch%3Amaster
 
