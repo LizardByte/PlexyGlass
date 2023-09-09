@@ -5,7 +5,7 @@ Testing
 
 Flake8
 ------
-PlexyGlass uses `Flake8 <https://pypi.org/project/flake8/>`_ for enforcing consistent code styling. Flake is included
+PlexyGlass uses `Flake8 <https://pypi.org/project/flake8/>`__ for enforcing consistent code styling. Flake is included
 in the ``requirements-dev.txt``.
 
 The config file for flake8 is ``.flake8``. This is already included in the root of the repo and should not be modified.
@@ -17,10 +17,10 @@ Test with Flake8
 
 Sphinx
 ------
-PlexyGlass uses `Sphinx <https://www.sphinx-doc.org/en/master/>`_ for documentation building. Sphinx is included
+PlexyGlass uses `Sphinx <https://www.sphinx-doc.org/en/master/>`__ for documentation building. Sphinx is included
 in the ``requirements-dev.txt``.
 
-PlexyGlass follows `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`_ styling and formatting in
+PlexyGlass follows `numpydoc <https://numpydoc.readthedocs.io/en/latest/format.html>`__ styling and formatting in
 docstrings. This will be tested when building the docs. `numpydoc` is included in the ``requirements-dev.txt``.
 
 The config file for Sphinx is ``docs/source/conf.py``. This is already included in the root of the repo and should not
@@ -43,7 +43,7 @@ pytest
 ------
 .. Todo:: PyTest is not yet implemented.
 
-PlexyGlass uses `pytest <https://pypi.org/project/pytest/>`_ for unit testing. pytest is included in the
+PlexyGlass uses `pytest <https://pypi.org/project/pytest/>`__ for unit testing. pytest is included in the
 ``requirements-dev.txt``.
 
 No config is required for pytest.

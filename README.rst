@@ -2,7 +2,7 @@
 
 Overview
 ========
-LizardByte has the full documentation hosted on `Read the Docs <http://plexyglass.readthedocs.io/>`_.
+LizardByte has the full documentation hosted on `Read the Docs <http://plexyglass.readthedocs.io/>`__.
 
 About
 -----
