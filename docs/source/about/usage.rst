@@ -37,4 +37,4 @@ minimal example.
    metadata.extras.add(OtherObject(url=video_url))
 
 .. Tip:: For help with metadata agent or general plug-in development, check out our
-   `plexhints <https://app.lizardbyte.dev/#Projects>`_ python library.
+   `plexhints <https://app.lizardbyte.dev/#Projects>`__ python library.
