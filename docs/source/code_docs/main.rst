@@ -1,4 +1,4 @@
-:github_url: https://github.com/LizardByte/PlexyGlass/tree/nightly/Contents/Code/__init__.py
+:github_url: https://github.com/LizardByte/PlexyGlass/blob/master/Contents/Code/__init__.py
 
 .. include:: ../global.rst
 

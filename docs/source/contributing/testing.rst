@@ -1,4 +1,4 @@
-:github_url: https://github.com/RetroArcher/RetroArcher.bundle/tree/nightly/docs/source/contributing/testing.rst
+:github_url: https://github.com/RetroArcher/RetroArcher.bundle/blob/master/docs/source/contributing/testing.rst
 
 Testing
 =======

@@ -1,4 +1,4 @@
-:github_url: https://github.com/LizardByte/PlexyGlass/tree/nightly/README.rst
+:github_url: https://github.com/LizardByte/PlexyGlass/blob/master/README.rst
 
 Overview
 ========
