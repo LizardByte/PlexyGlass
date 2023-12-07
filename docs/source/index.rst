@@ -1,4 +1,4 @@
-:github_url: https://github.com/LizardByte/PlexyGlass/tree/nightly/docs/source/index.rst
+:github_url: https://github.com/LizardByte/PlexyGlass/blob/master/docs/source/index.rst
 
 Table of Contents
 =================
