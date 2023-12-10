@@ -20,6 +20,10 @@ Integrations
    :alt: Read the Docs
    :target: http://plexyglass.readthedocs.io/
 
+.. image:: https://img.shields.io/codecov/c/gh/LizardByte/PlexyGlass?token=X8WDZVM33W&style=for-the-badge&logo=codecov&label=codecov
+   :alt: Codecov
+   :target: https://codecov.io/gh/LizardByte/PlexyGlass
+
 Downloads
 ---------
 

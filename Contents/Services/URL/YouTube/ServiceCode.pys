@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 # standard imports
@@ -104,8 +103,6 @@ def extract_youtube_data(url):
             Log.Error('%s :: %s %s Service :: error: %s' % (plugin_name, service_name, service_type, e))
             raise Ex.MediaNotAvailable
         except youtube_dl.utils.DownloadError as e:
-            print('----------')
-            print(e)
             if 'Sign in to confirm your age' in str(e):
                 Log.Error('%s :: %s %s Service :: error: %s' % (plugin_name, service_name, service_type, e))
                 raise Ex.MediaNotAuthorized
@@ -125,7 +122,7 @@ def extract_youtube_data(url):
     return
 
 
-def normalize_url(url):
+def NormalizeURL(url):
     # type: (str) -> Optional[str]
     """
     Get the video webpage url from `youtube-dl`.
@@ -142,7 +139,7 @@ def normalize_url(url):
 
     Examples
     --------
-    >>> normalize_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    >>> NormalizeURL(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     """
     Log.Info('%s :: %s %s Service :: normalizing url: %s' % (plugin_name, service_name, service_type, url))
@@ -162,7 +159,7 @@ def normalize_url(url):
             return webpage_url
 
 
-def metadata_object_for_url(url):
+def MetadataObjectForURL(url):
     # type: (str) -> Optional[VideoClipObject]
     """
     Get YouTube metadata for a given URL.
@@ -179,7 +176,7 @@ def metadata_object_for_url(url):
 
     Examples
     --------
-    >>> metadata_object_for_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    >>> MetadataObjectForURL(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     ...
     """
     Log.Info('%s :: %s %s Service :: collecting metadata for url: %s' % (plugin_name, service_name, service_type, url))
@@ -247,7 +244,7 @@ def metadata_object_for_url(url):
     )
 
 
-def media_objects_for_url(url):
+def MediaObjectsForURL(url):
     # type: (str) -> Optional[list]
     """
     Build the Plex media objects for a given URL.
@@ -264,7 +261,7 @@ def media_objects_for_url(url):
 
     Examples
     --------
-    >>> media_objects_for_url(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    >>> MediaObjectsForURL(url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     [...]
     """
     Log.Info('%s :: %s %s Service :: attempting to create media object for url: %s' % (
@@ -339,9 +336,3 @@ def play_video(url=None, default_fmt=None, **kwargs):
                 return IndirectResponse(VideoClipObject, key=final_url)
 
     return
-
-
-# remap plex predefined functions... function names should be lowercase
-NormalizeURL = normalize_url
-MetadataObjectForURL = metadata_object_for_url
-MediaObjectsForURL = media_objects_for_url
