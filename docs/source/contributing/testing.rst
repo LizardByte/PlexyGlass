@@ -1,4 +1,4 @@
-:github_url: https://github.com/RetroArcher/RetroArcher.bundle/blob/master/docs/source/contributing/testing.rst
+:github_url: https://github.com/LizardByte/PlexyGlass/blob/master/docs/source/contributing/testing.rst
 
 Testing
 =======
@@ -41,8 +41,6 @@ Test with Sphinx
 
 pytest
 ------
-.. Todo:: PyTest is not yet implemented.
-
 PlexyGlass uses `pytest <https://pypi.org/project/pytest/>`__ for unit testing. pytest is included in the
 ``requirements-dev.txt``.
 

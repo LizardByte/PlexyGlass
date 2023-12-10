@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# standard imports
-import sys
-
 # plex debugging
 try:
     import plexhints  # noqa: F401
@@ -19,13 +16,10 @@ else:  # the code is running outside of Plex
     from plexhints.prefs_kit import Prefs  # prefs kit
 
 # local imports
-if sys.version_info.major < 3:
-    from default_prefs import default_prefs
-else:
-    from .default_prefs import default_prefs
+from default_prefs import default_prefs
 
 
-def validate_prefs():
+def ValidatePrefs():
     # type: () -> MessageContainer
     """
     Validate plug-in preferences.
@@ -44,7 +38,7 @@ def validate_prefs():
 
     Examples
     --------
-    >>> validate_prefs()
+    >>> ValidatePrefs()
     ...
     """
     # todo - validate values are proper type of data, same as retroarcher
@@ -79,7 +73,7 @@ def validate_prefs():
         return MessageContainer(header='Success', message='RetroArcher - Provided preference values are ok')
 
 
-def start():
+def Start():
     # type: () -> None
     """
     Start the plug-in.
@@ -92,11 +86,11 @@ def start():
 
     Examples
     --------
-    >>> start()
+    >>> Start()
     ...
     """
     # validate prefs
-    prefs_valid = validate_prefs()
+    prefs_valid = ValidatePrefs()
     if prefs_valid.header == 'Error':
         Log.Warn('PlexyGlass plug-in preferences are not valid.')
 
@@ -112,8 +106,3 @@ def main():
     and since Plex removed menu's from plug-ins, this method does not need to perform any other function.
     """
     pass
-
-
-# remap plex predefined functions... function names should be lowercase
-Start = start
-ValidatePrefs = validate_prefs

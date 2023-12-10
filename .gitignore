@@ -168,3 +168,6 @@ plexhints-temp
 
 # Remove python modules
 Contents/Libraries/Shared/
+
+# Remove plex service file cache
+*.pys[cod]
