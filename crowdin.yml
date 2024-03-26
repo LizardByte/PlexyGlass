@@ -10,7 +10,7 @@
 "files": [
   {
     "source": "/Contents/Strings/en.json",
-    "dest": "/retroarcher-plex.json",
+    "dest": "/plexyglass.json",
     "translation": "/Contents/Strings/%two_letters_code%.%file_extension%",
     "languages_mapping": {
       "two_letters_code": {
