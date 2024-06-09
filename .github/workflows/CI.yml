@@ -47,7 +47,7 @@ jobs:
           submodules: recursive
 
       - name: Set up Python
-        uses: LizardByte/setup-python-action@v2024.515.10401
+        uses: LizardByte/setup-python-action@v2024.609.5111
         with:
           python-version: '2.7'
 
@@ -154,7 +154,7 @@ jobs:
           rm PlexyGlass.bundle.zip
 
       - name: Set up Python
-        uses: LizardByte/setup-python-action@v2024.515.10401
+        uses: LizardByte/setup-python-action@v2024.609.5111
         with:
           python-version: '2.7'
 
