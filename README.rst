@@ -2,6 +2,13 @@
 
 Overview
 ========
+
+.. attention::
+
+   Plex is removing ALL support for plugins. This project is no longer maintained. See
+   `Plex Forum <https://forums.plex.tv/t/important-information-for-users-running-plex-media-server-on-nvidia-shield-devices/883484>`__
+   for more information.
+
 LizardByte has the full documentation hosted on `Read the Docs <http://plexyglass.readthedocs.io/>`__.
 
 About
